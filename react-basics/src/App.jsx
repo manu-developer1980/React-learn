@@ -7,28 +7,46 @@ import Usuarios from "./components/Usuarios";
 import Debouncer from "./components/Debouncer";
 import Card from "./components/Card";
 import Layout from "./components/Layout";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <Layout>
-      <div>
-        <ListaTareas />
-        <Usuarios />
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <ListaTareas />
+              <Usuarios />
+            </>
+          }
+        />
 
-      <Kanban />
+        <Route
+          path="/kanban"
+          element={
+            <>
+              <Kanban />
+            </>
+          }
+        />
 
-      <Contador />
-      <Debouncer />
-      <section id="cardContainer">
-        <Card>
-          <h2>Tarjeta!</h2>
-          <p>Tarjeta usando "children"</p>
-        </Card>
-        <Card>
-          <button>Boton Children!</button>
-        </Card>
-      </section>
+        <Route
+          path="/vip"
+          element={<ListaVIP />}
+        />
+
+        <Route
+          path="/contador"
+          element={<Contador />}
+        />
+
+        <Route
+          path="/debounce"
+          element={<Debouncer />}
+        />
+      </Routes>
     </Layout>
   );
 }

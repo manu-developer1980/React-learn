@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { NavLink } from "react-router-dom";
 
 export default function ({ children }) {
   const { user, login, logout } = useContext(AuthContext);
-
   return (
     <div className="layout">
       <header>
@@ -16,6 +16,17 @@ export default function ({ children }) {
             Hola invitado. <button onClick={() => login("Manu")}>Entrar</button>
           </>
         )}
+        <nav>
+          <NavLink
+            to="/"
+            end>
+            Inicio
+          </NavLink>
+          <NavLink to="/kanban">Kanban</NavLink>
+          <NavLink to="/vip">Lista VIP</NavLink>
+          <NavLink to="/contador">Contador</NavLink>
+          <NavLink to="/debouncer">Debouncer</NavLink>
+        </nav>
       </header>
       <main className="contenido-principal">
         {children} {/* <--- Aquí se inyectará tu App actual */}
