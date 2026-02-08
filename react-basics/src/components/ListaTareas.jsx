@@ -1,17 +1,22 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
+import { TareasContext } from "../context/TareasContext";
 import useInput from "../hooks/useInput";
 
 export default function ListaTareas() {
-  const [tareas, setTareas] = useState(() => {
-    const tareasGuardadas = localStorage.getItem("misTareas");
-    return tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
-  });
+  const { tareas, agregarTarea, eliminarTarea, completarTarea } =
+    useContext(TareasContext);
 
   const [filtro, setFiltro] = useState("todas");
 
   const inputTarea = useInput("");
   const inputRef = useRef(null);
 
+  const handleAgregarTarea = (event) => {
+    event.preventDefault();
+    if (!inputTarea.value.trim()) return;
+    agregarTarea(inputTarea.value);
+    inputTarea.reset();
+  };
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -33,34 +38,6 @@ export default function ListaTareas() {
     }
   });
 
-  const agregarTarea = (evento) => {
-    evento.preventDefault();
-    if (!inputTarea.value.trim()) return;
-
-    const tareaObject = {
-      id: Date.now(),
-      texto: inputTarea.value,
-      estado: "incompleta",
-    };
-    setTareas([...tareas, tareaObject]);
-    inputTarea.reset();
-  };
-
-  const eliminarTarea = (id) => {
-    const tareasFiltradas = tareas.filter((tarea) => tarea.id !== id);
-    setTareas(tareasFiltradas);
-  };
-
-  const completarTarea = (id) => {
-    const nuevasTareas = tareas.map((tarea) => {
-      if (tarea.id === id) {
-        return { ...tarea, estado: "completa" };
-      }
-      return tarea;
-    });
-    setTareas(nuevasTareas);
-  };
-
   return (
     <>
       <h3>ListaTareas</h3>
@@ -71,8 +48,7 @@ export default function ListaTareas() {
               key={tarea.id}
               className={
                 tarea.estado === "completa" ? "completa" : "incompleta"
-              }
-            >
+              }>
               <span>{tarea.texto}</span>
               <span className="buttons">
                 {tarea.estado === "incompleta" && (
@@ -93,7 +69,7 @@ export default function ListaTareas() {
       ) : (
         <p>No hay tareas todavía.</p>
       )}
-      <form onSubmit={agregarTarea}>
+      <form onSubmit={handleAgregarTarea}>
         <input
           value={inputTarea.value}
           onChange={inputTarea.onChange}
@@ -101,12 +77,7 @@ export default function ListaTareas() {
           placeholder="Añadir tarea..."
           ref={inputRef}
         />
-        <button
-          type="submit"
-          onSubmit={agregarTarea}
-        >
-          Añadir tarea
-        </button>
+        <button type="submit">Añadir tarea</button>
       </form>
     </>
   );

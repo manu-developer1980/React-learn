@@ -8,6 +8,7 @@ import Debouncer from "./components/Debouncer";
 import Card from "./components/Card";
 import Layout from "./components/Layout";
 import { Routes, Route } from "react-router-dom";
+import UsuarioDetalle from "./components/UsuarioDetalle";
 
 function App() {
   return (
@@ -43,8 +44,21 @@ function App() {
         />
 
         <Route
-          path="/debounce"
+          path="/debouncer"
           element={<Debouncer />}
+        />
+        <Route
+          path="/usuario/:id"
+          element={<UsuarioDetalle />}
+        />
+
+        <Route
+          path="/usuarios"
+          element={<Usuarios />}
+        />
+        <Route
+          path="*"
+          element={<h2>404 - Página no encontrada 😵</h2>}
         />
       </Routes>
     </Layout>

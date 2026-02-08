@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import LoadingSpinner from "./LoadingSpinner";
+import { Link } from "react-router-dom";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
@@ -18,7 +19,6 @@ export default function Usuarios() {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((respuesta) => respuesta.json())
       .then((datos) => {
-        console.log(datos);
         setUsuarios(datos);
         setCarga(false);
       })
@@ -33,19 +33,10 @@ export default function Usuarios() {
           <LoadingSpinner />
         ) : (
           usuarios.map((usuario) => (
-            <li
-              key={usuario.id}
-              onClick={() => {
-                verDetalles(usuario.id);
-              }}
-            >
-              <span>{usuario.name}</span>
-              {usuarioSeleccionado === usuario.id && (
-                <div className="detalles">
-                  <p>📧 {usuario.email}</p>
-                  <p>🛜 {usuario.website}</p>
-                </div>
-              )}
+            <li>
+              <Link to={`/usuario/${usuario.id}`}>
+                <span>{usuario.name}</span>
+              </Link>
             </li>
           ))
         )}

@@ -26,6 +26,7 @@ export default function ({ children }) {
           <NavLink to="/vip">Lista VIP</NavLink>
           <NavLink to="/contador">Contador</NavLink>
           <NavLink to="/debouncer">Debouncer</NavLink>
+          <NavLink to="/usuarios">Usuarios</NavLink>
         </nav>
       </header>
       <main className="contenido-principal">

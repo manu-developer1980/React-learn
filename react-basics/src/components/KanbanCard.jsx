@@ -14,7 +14,7 @@ export default function KabanCard({
 
   const renderButtons = (estado, id) => {
     switch (estado) {
-      case "pendiente":
+      case "incompleta":
         return (
           <button onClick={() => cambiarEstado(id, "iniciada")}>
             Iniciar Tarea
@@ -26,7 +26,7 @@ export default function KabanCard({
             <button onClick={() => cambiarEstado(id, "completa")}>
               Completar
             </button>
-            <button onClick={() => cambiarEstado(id, "pendiente")}>
+            <button onClick={() => cambiarEstado(id, "incompleta")}>
               Pendiente
             </button>
           </>
@@ -51,13 +51,11 @@ export default function KabanCard({
         {tareas.map((tarea) => (
           <li
             key={tarea.id}
-            className={tarea.estado}
-          >
+            className={tarea.estado}>
             <span
               onDoubleClick={() => {
                 onActivarEdicion(tarea.id);
-              }}
-            >
+              }}>
               {tarea.modo === "lectura" ? (
                 tarea.texto
               ) : (
