@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
 
-export function useFetch(url) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+interface FetchResult<T> {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+}
+export function useFetch<T>(url: string): FetchResult<T> {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -12,7 +17,7 @@ export function useFetch(url) {
 
     fetch(url)
       .then((response) => response.json())
-      .then((json) => {
+      .then((json: T) => {
         setData(json);
         setLoading(false);
       })

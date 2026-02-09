@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "./LoadingSpinner";
+import { Usuario } from "../types/usuario";
 
 export default function UsuarioDetalle() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ export default function UsuarioDetalle() {
     data: usuario,
     loading: carga,
     error,
-  } = useFetch(`https://jsonplaceholder.typicode.com/users/${id}`);
+  } = useFetch<Usuario>(`https://jsonplaceholder.typicode.com/users/${id}`);
 
   return (
     <>

@@ -1,4 +1,4 @@
-# Estado Actual del Proyecto: React Basics (App Tareas + Context)
+# Estado Actual del Proyecto: Transición a TypeScript (React-TS)
 
 Hola, estoy retomando el proyecto. Soy el mismo alumno, pero en otra sesión.
 Aquí tienes el resumen de donde lo dejamos:
@@ -7,23 +7,32 @@ Aquí tienes el resumen de donde lo dejamos:
 
 - **Rol:** Eres mi profesor Full-Stack (paciente, didáctico, das pistas, no soluciones completas).
 - **REGLA DE ORO:** NUNCA escribas código por mí ni crees archivos automáticamente. Yo escribo todo. Tú solo guías.
-- **Nivel:** Estamos terminando React Basics y transición a Custom Hooks avanzados.
+- **Nivel:** Hemos completado React Basics y estamos en plena **migración a TypeScript**.
 
 ## 2. Lo que logramos en la última sesión ✅
 
-- **TareasContext:** Implementamos `TareasContext.jsx` con persistencia en `localStorage` (clave: `"misTareasContext"`).
-- **Refactorización Completa:**
-  - `ListaTareas.jsx`: Migrado a Context API (ya no usa estado local).
-  - `ListaTareasKanban.jsx`: Migrado a Context API y corregidos bugs de sintaxis (`useInput`, `useRef`).
-- **Sincronización:** Solucionamos el conflicto de nombres (`"incompleta"` vs `"pendiente"`) adaptando el filtro del Kanban.
+- **Limpieza (React Basics):**
+  - Eliminamos código redundante en `ListaTareas.jsx` (el `useEffect` antiguo).
+  - Creamos el Custom Hook `useFetch` para abstraer la lógica de datos.
+  - Refactorizamos `Usuarios.jsx` y `UsuarioDetalle.jsx` para usar el hook.
 
-## 3. Tareas Pendientes / Bugs Menores 🐛
+- **Inicio de TypeScript (`react-ts`):**
+  - Duplicamos el proyecto a una nueva carpeta `react-ts`.
+  - Configuramos TypeScript (`tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`).
+  - **Migración de Archivos:**
+    - `useFetch.ts`: Implementamos **Genéricos** `<T>` para tipado flexible.
+    - `Usuarios.tsx` y `UsuarioDetalle.tsx`: Migrados a TSX con interfaces.
+    - `LoadingSpinner.tsx`: Migrado para evitar errores de importación.
+  - **Arquitectura:** Creamos `src/types/usuario.ts` para centralizar interfaces compartidas.
 
-- **Limpieza en ListaTareas.jsx:** Quedó un `useEffect` residual que guarda en `localStorage` (clave antigua `"misTareas"`). Hay que borrarlo porque el Contexto ya se encarga de eso.
+## 3. Estado Actual 🚧
+
+- Estamos trabajando exclusivamente en la carpeta **`react-ts`**.
+- El proyecto compila y funciona, pero aún quedan componentes en `.jsx` (JS) conviviendo con `.tsx` (TS).
 
 ## 4. Siguiente Objetivo 🎯
 
-- **Custom Hooks de Datos:** Queremos crear un hook `useFetch` para abstraer la lógica de carga de datos en `Usuarios.jsx` y `UsuarioDetalle.jsx`.
-- **Objetivo Final:** Preparar el terreno para usar TypeScript y Next.js más adelante.
-
-Por favor, ayúdame primero a borrar el código redundante en `ListaTareas.jsx` y luego guíame para crear el hook `useFetch`.
+- **Continuar la Migración:**
+  - Migrar `ListaTareas.jsx` y `Kanban` (reto: tipar eventos `onChange`, `onSubmit`).
+  - Migrar el Contexto `TareasContext.jsx` (reto avanzado: tipar el `provider` y el custom hook del contexto).
+- **Objetivo Final:** Tener el proyecto 100% en TypeScript estricto antes de pasar a Node/Next.js.
