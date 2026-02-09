@@ -1,29 +1,14 @@
 import { useState, useEffect } from "react";
 import LoadingSpinner from "./LoadingSpinner";
+import { useFetch } from "../hooks/useFetch";
 import { Link } from "react-router-dom";
 
 export default function Usuarios() {
-  const [usuarios, setUsuarios] = useState([]);
-  const [carga, setCarga] = useState(true);
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
-
-  const verDetalles = (id) => {
-    if (usuarioSeleccionado === id) {
-      setUsuarioSeleccionado(null);
-    } else {
-      setUsuarioSeleccionado(id);
-    }
-  };
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((respuesta) => respuesta.json())
-      .then((datos) => {
-        setUsuarios(datos);
-        setCarga(false);
-      })
-      .catch((error) => console.error("Error cargado usuarios:".error));
-  }, []);
+  const {
+    data: usuarios,
+    loading: carga,
+    error,
+  } = useFetch("https://jsonplaceholder.typicode.com/users");
 
   return (
     <>
@@ -32,6 +17,7 @@ export default function Usuarios() {
         {carga ? (
           <LoadingSpinner />
         ) : (
+          usuarios &&
           usuarios.map((usuario) => (
             <li>
               <Link to={`/usuario/${usuario.id}`}>

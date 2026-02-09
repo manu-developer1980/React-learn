@@ -1,31 +1,30 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "./LoadingSpinner";
 
 export default function UsuarioDetalle() {
   const { id } = useParams();
-  const [usuario, setUsuario] = useState(null);
+  const {
+    data: usuario,
+    loading: carga,
+    error,
+  } = useFetch(`https://jsonplaceholder.typicode.com/users/${id}`);
 
-  useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
-      .then((res) => res.json())
-      .then((data) => setUsuario(data))
-      .catch((error) => console.error("Error cargado usuarios:".error));
-  }, [id]);
-  if (!usuario)
-    return (
-      <>
-        <LoadingSpinner />
-      </>
-    );
   return (
     <>
-      <h2>{usuario.name}</h2>
-      <p>Email: {usuario.email}</p>
-      <p>Teléfono: {usuario.phone}</p>
-      <p>Web: {usuario.website}</p>
-      <br />
-      <Link to="/">👈 Volver a inicio</Link>
+      {carga && <LoadingSpinner />}
+      {error && <p>Error: {error.message}</p>}
+      {usuario && (
+        <>
+          <h2>{usuario.name}</h2>
+          <p>Email: {usuario.email}</p>
+          <p>Teléfono: {usuario.phone}</p>
+          <p>Web: {usuario.website}</p>
+          <br />
+          <Link to="/">👈 Volver a inicio</Link>
+        </>
+      )}
     </>
   );
 }
