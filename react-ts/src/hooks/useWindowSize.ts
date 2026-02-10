@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 export default function useWindowSize() {
-  const [ancho, setAncho] = useState(window.innerWidth);
-  const [alto, setAlto] = useState(window.innerHeight);
+  const [ancho, setAncho] = useState<number>(window.innerWidth);
+  const [alto, setAlto] = useState<number>(window.innerHeight);
 
   useEffect(() => {
     const actualizarTamaño = () => {
@@ -17,5 +17,5 @@ export default function useWindowSize() {
     };
   }, []);
 
-  return [alto, ancho];
+  return [alto, ancho] as const;
 }

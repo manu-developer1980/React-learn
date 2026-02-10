@@ -1,8 +1,10 @@
-import { createContext, useEffect, useState } from "react";
-export const TareasContext = createContext();
+import { createContext, useEffect, useState, ReactNode } from "react";
+import { TareaContextType, Tarea, EstadoTarea } from "../types/tarea";
 
-export function TareasProvider({ children }) {
-  const [tareas, setTareas] = useState(() => {
+export const TareasContext = createContext<TareaContextType | null>(null);
+
+export function TareasProvider({ children }: { children: ReactNode }) {
+  const [tareas, setTareas] = useState<Tarea[]>(() => {
     const tareasGuardadas = localStorage.getItem("misTareasContext");
     return tareasGuardadas ? JSON.parse(tareasGuardadas) : [];
   });
@@ -11,8 +13,8 @@ export function TareasProvider({ children }) {
     localStorage.setItem("misTareasContext", JSON.stringify(tareas));
   }, [tareas]);
 
-  const agregarTarea = (texto) => {
-    const nuevaTarea = {
+  const agregarTarea = (texto: string) => {
+    const nuevaTarea: Tarea = {
       id: Date.now(),
       texto,
       estado: "incompleta",
@@ -22,23 +24,23 @@ export function TareasProvider({ children }) {
     setTareas([...tareas, nuevaTarea]);
   };
 
-  const eliminarTarea = (id) => {
-    setTareas(tareas.filter((t) => t.id != id));
+  const eliminarTarea = (id: number) => {
+    setTareas(tareas.filter((t) => t.id !== id));
   };
 
-  const completarTarea = (id) => {
+  const completarTarea = (id: number) => {
     setTareas(
       tareas.map((t) => (t.id === id ? { ...t, estado: "completa" } : t)),
     );
   };
 
-  const cambiarEstado = (id, nuevoEstado) => {
+  const cambiarEstado = (id: number, nuevoEstado: EstadoTarea) => {
     setTareas(
       tareas.map((t) => (t.id === id ? { ...t, estado: nuevoEstado } : t)),
     );
   };
 
-  const activarEdicion = (id) => {
+  const activarEdicion = (id: number) => {
     setTareas(
       tareas.map((t) =>
         t.id === id
@@ -48,13 +50,14 @@ export function TareasProvider({ children }) {
     );
   };
 
-  const guardarEdicion = (id, nuevoTexto) => {
+  const guardarEdicion = (id: number, nuevoTexto: string) => {
     setTareas(
       tareas.map((t) =>
         t.id === id ? { ...t, texto: nuevoTexto, modo: "lectura" } : t,
       ),
     );
   };
+
   return (
     <TareasContext.Provider
       value={{
@@ -65,7 +68,8 @@ export function TareasProvider({ children }) {
         activarEdicion,
         guardarEdicion,
         cambiarEstado,
-      }}>
+      }}
+    >
       {children}
     </TareasContext.Provider>
   );

@@ -1,11 +1,9 @@
 import Contador from "./components/Contador";
 import ListaTareas from "./components/ListaTareas";
 import Kanban from "./components/Kanban";
-import ListaVIP from "./components/listaVIP";
-import Saludo from "./components/Saludo";
+import ListaVIP from "./components/ListaVIP";
 import Usuarios from "./components/Usuarios";
 import Debouncer from "./components/Debouncer";
-import Card from "./components/Card";
 import Layout from "./components/Layout";
 import { Routes, Route } from "react-router-dom";
 import UsuarioDetalle from "./components/UsuarioDetalle";
@@ -26,11 +24,7 @@ function App() {
 
         <Route
           path="/kanban"
-          element={
-            <>
-              <Kanban />
-            </>
-          }
+          element={<Kanban />}
         />
 
         <Route
@@ -55,6 +49,10 @@ function App() {
         <Route
           path="/usuarios"
           element={<Usuarios />}
+        />
+        <Route
+          path="/tareas"
+          element={<ListaTareas />}
         />
         <Route
           path="*"

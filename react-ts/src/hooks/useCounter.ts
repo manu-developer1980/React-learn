@@ -1,8 +1,7 @@
-import React from "react";
 import { useState } from "react";
 
 export default function useCounter() {
-  const [contador, setContador] = useState(0);
+  const [contador, setContador] = useState<number>(0);
 
   const aumentar = () => {
     setContador(contador + 1);

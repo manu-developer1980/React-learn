@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
 import useDebounce from "../hooks/useDebounce";
+import { useState } from "react";
 
 export default function Debouncer() {
   const [texto, setTexto] = useState("");
-  const textoDebounced = useDebounce(texto, 500);
+  const textoDebounced = useDebounce({ value: texto, delay: 500 });
   return (
     <>
       <input

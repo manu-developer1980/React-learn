@@ -1,18 +1,22 @@
-import React from "react";
+import { useContext } from "react";
+import { EstadoTarea, Tarea } from "../types/tarea";
 import InputEdicion from "./InputEdicion";
-export default function KabanCard({
-  tareas,
-  estado,
-  cambiarEstado,
-  borrarTarea,
-  onActivarEdicion,
-  guardarEdicion,
-}) {
-  const capital = (texto) => {
+import { TareasContext } from "../context/TareasContext";
+
+interface Props {
+  tareas: Tarea[];
+  estado: EstadoTarea;
+}
+
+export default function KabanCard({ tareas, estado }: Props) {
+  const { cambiarEstado, eliminarTarea, activarEdicion, guardarEdicion } =
+    useContext(TareasContext)!;
+
+  const capital = (texto: string) => {
     return texto.charAt(0).toUpperCase() + texto.slice(1);
   };
 
-  const renderButtons = (estado, id) => {
+  const renderButtons = (estado: EstadoTarea, id: number) => {
     switch (estado) {
       case "incompleta":
         return (
@@ -38,7 +42,7 @@ export default function KabanCard({
             <button onClick={() => cambiarEstado(id, "iniciada")}>
               Iniciada
             </button>
-            <button onClick={() => borrarTarea(id)}>Borrar</button>
+            <button onClick={() => eliminarTarea(id)}>Borrar</button>
           </>
         );
     }
@@ -48,20 +52,22 @@ export default function KabanCard({
     <>
       <ul className={`tareas${capital(estado)}s`}>
         <h5>{estado}</h5>
-        {tareas.map((tarea) => (
+        {tareas.map((tarea: Tarea) => (
           <li
             key={tarea.id}
-            className={tarea.estado}>
+            className={tarea.estado}
+          >
             <span
               onDoubleClick={() => {
-                onActivarEdicion(tarea.id);
-              }}>
+                activarEdicion(tarea.id);
+              }}
+            >
               {tarea.modo === "lectura" ? (
                 tarea.texto
               ) : (
                 <InputEdicion
                   textoInicial={tarea.texto}
-                  onGuardarEdicion={(nuevoTexto) =>
+                  onGuardarEdicion={(nuevoTexto: string) =>
                     guardarEdicion(tarea.id, nuevoTexto)
                   }
                 />

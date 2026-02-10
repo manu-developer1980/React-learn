@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import ListaTareasKanban from "./ListaTareasKanban";
 
 export default function Kanban() {

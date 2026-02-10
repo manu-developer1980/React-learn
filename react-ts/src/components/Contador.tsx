@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import useCounter from "../hooks/useCounter";
 
 export default function Contador() {

@@ -1,9 +1,15 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
-export default function ({ children }) {
-  const { user, login, logout } = useContext(AuthContext);
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default function ({ children }: LayoutProps) {
+  const { user, login, logout } = useAuth();
+  useAuth();
+
   return (
     <div className="layout">
       <header>
@@ -19,7 +25,8 @@ export default function ({ children }) {
         <nav>
           <NavLink
             to="/"
-            end>
+            end
+          >
             Inicio
           </NavLink>
           <NavLink to="/kanban">Kanban</NavLink>

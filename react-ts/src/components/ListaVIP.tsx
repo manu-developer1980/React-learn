@@ -1,14 +1,17 @@
 import { useState } from "react";
 
+interface Invitado {
+  id: number;
+  nombre: string;
+  vip: boolean;
+}
 export default function ListaVIP() {
-  const [invitados, setInvitados] = useState([]);
-
+  const [invitados, setInvitados] = useState<Invitado[]>([]);
   const [nuevoInvitado, setNuevoInvitado] = useState("");
 
-  const agregarInvitado = (evento) => {
-    evento.preventDefault();
+  const agregarInvitado = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!nuevoInvitado.trim()) return;
-
     const nuevoInvitadoObj = {
       id: Date.now(),
       nombre: nuevoInvitado,
@@ -19,7 +22,7 @@ export default function ListaVIP() {
     setNuevoInvitado("");
   };
 
-  const cambiarStatus = (id) => {
+  const cambiarStatus = (id: number) => {
     const nuevaLista = invitados.map((invitado) => {
       if (invitado.id === id) {
         return { ...invitado, vip: !invitado.vip };
@@ -29,7 +32,7 @@ export default function ListaVIP() {
     setInvitados(nuevaLista);
   };
 
-  const borrarInvitado = (id) => {
+  const borrarInvitado = (id: number) => {
     const invitadosFiltrados = invitados.filter(
       (invitado) => invitado.id !== id,
     );
@@ -74,7 +77,6 @@ export default function ListaVIP() {
           />
           <button
             type="submit"
-            onSubmit={agregarInvitado}
             disabled={invitados.length >= 10}
           >
             {invitados.length < 10 ? "Añadir invitado" : "Aforo Completo"}

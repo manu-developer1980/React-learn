@@ -1,24 +1,30 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  ReactEventHandler,
+} from "react";
 import { TareasContext } from "../context/TareasContext";
 import useInput from "../hooks/useInput";
 
 export default function ListaTareas() {
   const { tareas, agregarTarea, eliminarTarea, completarTarea } =
-    useContext(TareasContext);
+    useContext(TareasContext)!;
 
-  const [filtro, setFiltro] = useState("todas");
+  const [filtro, setFiltro] = useState<string>("todas");
 
   const inputTarea = useInput("");
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleAgregarTarea = (event) => {
-    event.preventDefault();
+  const handleAgregarTarea = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!inputTarea.value.trim()) return;
     agregarTarea(inputTarea.value);
     inputTarea.reset();
   };
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -48,7 +54,8 @@ export default function ListaTareas() {
               key={tarea.id}
               className={
                 tarea.estado === "completa" ? "completa" : "incompleta"
-              }>
+              }
+            >
               <span>{tarea.texto}</span>
               <span className="buttons">
                 {tarea.estado === "incompleta" && (
