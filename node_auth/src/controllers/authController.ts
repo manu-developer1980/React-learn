@@ -59,13 +59,16 @@ export const login = async (req: Request, res: Response) => {
         });
         return;
       }
-      const token: string = process.env.JWT_SECRET;
       const decrypt = await bcrypt.compare(password, user.password);
 
       if (decrypt) {
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-          expiresIn: "1h",
-        });
+        const token = jwt.sign(
+          { userId: user.id, userName: user.name },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "1h",
+          },
+        );
         res.status(200).json({
           mensaje: `Bienvenido ${user.name}`,
           token: token,

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { ProductsType } from "../types/productType.js";
 import { PrismaClient } from "@prisma/client";
+import { AuthedRequest } from "../types/authedRequestType.js";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +10,7 @@ export const getProducts = async (req: Request, res: Response) => {
   res.json(products);
 };
 
-export const addProducts = async (req: Request, res: Response) => {
+export const addProducts = async (req: AuthedRequest, res: Response) => {
   const nuevoProducto: ProductsType = req.body;
 
   await prisma.product.create({
@@ -23,6 +24,10 @@ export const addProducts = async (req: Request, res: Response) => {
   res.status(201).json({
     mensaje: "Producto añadido",
     producto: nuevoProducto,
+    añadidoPor: {
+      userName: req.userName,
+      userId: req.userId,
+    },
   });
 };
 
@@ -46,7 +51,7 @@ export const findProduct = async (req: Request, res: Response) => {
   }
 };
 
-export const updateProd = async (req: Request, res: Response) => {
+export const updateProd = async (req: AuthedRequest, res: Response) => {
   const idBuscado = parseInt((req.params.id as string) || "0");
   const updatedProd = await prisma.product.update({
     data: req.body,
@@ -56,9 +61,13 @@ export const updateProd = async (req: Request, res: Response) => {
   res.status(200).json({
     mensaje: "Actualizacion correcta",
     updatedProducts: updatedProd,
+    modificadoPor: {
+      userName: req.userName,
+      userId: req.userId,
+    },
   });
 };
-export const deleteProd = async (req: Request, res: Response) => {
+export const deleteProd = async (req: AuthedRequest, res: Response) => {
   const idBuscado = parseInt((req.params.id as string) || "0");
   await prisma.product.delete({
     where: { id: idBuscado },
@@ -67,10 +76,14 @@ export const deleteProd = async (req: Request, res: Response) => {
   res.status(200).json({
     mensaje: "Producto eliminado",
     updatedProducts: await prisma.product.findMany(),
+    eliminadoPor: {
+      userName: req.userName,
+      userId: req.userId,
+    },
   });
 };
 
-export const addBatchProducts = async (res: Response, req: Request) => {
+export const addBatchProducts = async (req: Request, res: Response) => {
   try {
     const count = await prisma.product.createMany({
       data: req.body,

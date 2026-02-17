@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
+import { AuthedRequest } from "../types/authedRequestType.js";
 
-export const Auth = (req: Request, res: Response, next: NextFunction) => {
+export const tokenCheck = (
+  req: AuthedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   const authRequest = req.headers.authorization;
 
   if (!authRequest) {
@@ -37,7 +42,8 @@ export const Auth = (req: Request, res: Response, next: NextFunction) => {
   }
   try {
     const payload = jwt.verify(token, jwtSecret as string) as JwtPayload;
-    (req as any).userId = payload.userId;
+    req.userId = payload.userId as number;
+    req.userName = payload.userName as string;
     next();
   } catch (error) {
     res.status(401).json({
