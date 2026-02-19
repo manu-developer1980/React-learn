@@ -294,3 +294,230 @@ Buenas prácticas:
 - No exponer stack trace ni detalles internos en producción.
 - Mantener códigos HTTP correctos y mensajes cortos, claros y consistentes.
 - Centralizar el manejo en un middleware de errores para respuestas uniformes.
+
+---
+
+## 🧩 Prisma: Instalación, Inicialización y Mini Guía
+
+### Comandos rápidos
+
+Supabase Postgres:
+
+```bash
+npm i @prisma/client && npm i -D prisma
+npx prisma init --datasource-provider postgresql
+# Edita .env con tu DATABASE_URL de Supabase
+npx prisma migrate dev --name init
+npx prisma generate
+npx prisma studio
+```
+
+SQLite local (práctica rápida):
+
+```bash
+npm i @prisma/client && npm i -D prisma
+npx prisma init --datasource-provider sqlite
+# DATABASE_URL="file:./dev.db" ya queda configurado
+npx prisma migrate dev --name init
+npx prisma generate
+npx prisma studio
+```
+
+### Instalar
+
+```bash
+npm i @prisma/client
+npm i -D prisma
+```
+
+### Inicializar proyecto Prisma
+
+```bash
+npx prisma init --datasource-provider postgresql
+```
+
+Esto crea:
+
+- `.env` con `DATABASE_URL`
+- `prisma/schema.prisma`
+
+### Configurar `.env`
+
+- Supabase Postgres:
+
+```
+DATABASE_URL="postgresql://<user>:<password>@<host>:<port>/<database>?schema=public"
+```
+
+- Copia el string desde Supabase → Settings → Database → Connection string (URI).
+
+- Local (rápido para práctica): usa SQLite cambiando el provider
+
+```
+DATABASE_URL="file:./dev.db"
+```
+
+- Y en `schema.prisma` ajusta `provider = "sqlite"`.
+
+### Definir modelos (ejemplo mínimo)
+
+```prisma
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  products  Product[]
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+```
+
+### Migraciones y generación de cliente
+
+```bash
+npx prisma migrate dev --name init
+npx prisma generate
+```
+
+Opcional (sin migraciones, solo sincroniza el schema):
+
+```bash
+npx prisma db push
+```
+
+### Seed (poblado inicial opcional)
+
+```bash
+node prisma/seed.ts
+```
+
+Suele contener inserciones básicas usando el `PrismaClient`.
+
+### Uso en código (mínimo)
+
+```ts
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+// ejemplo de lectura
+const products = await prisma.product.findMany();
+
+// ejemplo de escritura
+await prisma.product.create({
+  data: { name: "Producto", price: 9.99, userId: 1 },
+});
+```
+
+### Métodos comunes de Prisma (CRUD básico)
+
+Los siguientes ejemplos usan `prisma.user`, pero aplica igual para cualquier modelo (`product`, `order`, etc.).
+
+- Leer muchos registros:
+  ```ts
+  const users = await prisma.user.findMany();
+  ```
+- Leer uno por ID (o campo único):
+  ```ts
+  const user = await prisma.user.findUnique({
+    where: { id: 1 },
+  });
+  ```
+- Crear un registro:
+  ```ts
+  const newUser = await prisma.user.create({
+    data: {
+      email: "test@test.com",
+      password: "hashed-password",
+    },
+  });
+  ```
+- Actualizar un registro:
+  ```ts
+  const updatedUser = await prisma.user.update({
+    where: { id: 1 },
+    data: { email: "nuevo@test.com" },
+  });
+  ```
+- Borrar un registro:
+  ```ts
+  const deletedUser = await prisma.user.delete({
+    where: { id: 1 },
+  });
+  ```
+- Contar registros:
+  ```ts
+  const totalUsers = await prisma.user.count();
+  ```
+- Upsert (crear si no existe, actualizar si existe):
+  ```ts
+  const upsertedUser = await prisma.user.upsert({
+    where: { email: "test@test.com" },
+    create: {
+      email: "test@test.com",
+      password: "hashed-password",
+    },
+    update: {
+      lastLoginAt: new Date(),
+    },
+  });
+  ```
+
+### Herramientas útiles
+
+```bash
+npx prisma studio     # UI para explorar datos
+npx prisma format     # formatea schema.prisma
+npx prisma migrate dev --name <nombre>  # crea migración nueva
+```
+
+### Buenas prácticas rápidas
+
+- Usa `migrate dev` para generar migraciones versionadas (evita `db push` en producción).
+- Mantén `schema.prisma` como fuente de verdad del modelo.
+
+---
+
+### Flujo lógico Prisma paso a paso (para memorizar)
+
+1. **Instalación**
+   - `npm i @prisma/client`
+   - `npm i -D prisma`
+2. **Inicializar Prisma en el proyecto**
+   - `npx prisma init --datasource-provider postgresql` (o `sqlite` para local)
+   - Se crean `.env` y `prisma/schema.prisma`.
+3. **Configuración de BD remota (Supabase/Postgres)**
+   - En `.env`: `DATABASE_URL="postgresql://user:password@host:port/db?schema=public"`.
+   - En `schema.prisma`: `provider = "postgresql"`, `url = env("DATABASE_URL")`.
+4. **Configuración de BD local (SQLite)**
+   - En `.env`: `DATABASE_URL="file:./dev.db"`.
+   - En `schema.prisma`: `provider = "sqlite"`, `url = env("DATABASE_URL")`.
+5. **Creación de schemas (modelos)**
+   - Editar `prisma/schema.prisma` y definir `model User`, `model Product`, etc.
+   - Guardar cambios: aquí solo has tocado Prisma, la BD aún no se ha enterado.
+6. **Sincronización Prisma ↔ BD**
+   - Modo “serio” (con historial): `npx prisma migrate dev --name init`.
+   - Modo rápido (sin migraciones versionadas): `npx prisma db push`.
+7. **Generar cliente**
+   - `npx prisma generate` (también se ejecuta dentro de `migrate dev`).
+8. **Uso en código**
+   - Crear `const prisma = new PrismaClient();`.
+   - Hacer queries: `prisma.user.findMany()`, `prisma.product.create({...})`, etc.
