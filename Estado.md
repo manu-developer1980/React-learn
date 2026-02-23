@@ -69,12 +69,17 @@
   - Existe flujo de refresh para renovar tokens expirados si el usuario sigue siendo válido.
 - La base de datos y Prisma ya están integrados en el flujo real de trabajo (Supabase) y en ejercicios locales (SQLite) para practicar sin riesgo.
 
-## 4. Próximos Pasos (Hoja de Ruta: Profundizar en DB + Auth) 🗺️
+## 4. Próximos Pasos (Hoja de Ruta: Profundizar en DB + Auth + Frontend) 🗺️
 
 1. **Roles y autorizaciones en API principal:** Llevar el modelo de roles (`user` / `admin`) y el patrón `adminCheck` del mini‑proyecto `jwt-ej1` a la API de productos en Supabase.
 2. **Asociar productos a usuarios:** Guardar `userId` en la tabla de productos para saber el “owner” real y limitar edición/borrado solo al creador o admin.
 3. **Validaciones y errores:** Mejorar manejo de errores, validaciones de entrada y mensajes de respuesta (por ejemplo usando una capa de validación tipo Zod/JOI en los controladores).
 4. **Tests básicos:** Crear pruebas de integración para login, rutas protegidas, flujo de refresh y restricciones de rol.
-5. **Preparar salto al Frontend:** Dejar APIs listas para ser consumidas desde React/Next.js, incluyendo:
+5. **Mini‑proyecto React “Auth Dashboard”:** Crear una SPA en React (Vite + TS) que consuma el backend `jwt-ej1`:
+   - Pantallas: Login, Profile, Admin (gestión de usuarios).
+   - Uso de `react-router-dom` para rutas públicas, privadas y solo admin.
+   - Contexto/Hooks de auth para manejar `user`, `token`, `login`, `logout`.
+   - Llamadas a `/login`, `/profile`, `/register` y `/refresh` desde el frontend.
+6. **Preparar salto a Next.js:** Dejar APIs listas para ser consumidas desde Next.js, incluyendo:
    - Manejo de tokens en el cliente (almacenamiento seguro).
    - Uso de `/refresh` para renovar sesión sin re‑loguear al usuario.
