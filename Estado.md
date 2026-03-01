@@ -44,16 +44,12 @@
   - Tipo `AuthedRequest`:
     - Extiende `Request` con `userId`, `userName`, `userEmail`, `userRole` opcionales.
     - Permite tipar middlewares y controladores protegidos sin perder compatibilidad con Express.
-- **Conceptos Aprendidos:**
-  - Middleware (`express.json` y middlewares propios en cadena: auth, admin, etc.).
-  - Códigos de Estado HTTP (200, 201, 401, 403, 404, 500).
-  - Tipado fuerte con TypeScript (`Request`, `Response`, tipos personalizados, intersecciones).
-  - ORM con Prisma (modelado, lectura y escritura en BD real y en SQLite local).
-  - Fundamentos de JWT (sign, verify, payload, expiración).
-  - Manejo avanzado de JWT:
-    - Tratamiento de errores específicos (`TokenExpiredError`).
-    - Refresh tokens (regenerar access token a partir de uno expirado).
-    - Autorización por roles (`user` / `admin`).
+- **Mini‑proyecto React “Auth Dashboard” (Setup Inicial):**
+  - Proyecto inicializado con Vite + React + TypeScript.
+  - Configuración de TailwindCSS v4 con soporte nativo de anidación CSS.
+  - Implementación de React Router Dom con rutas: `/login`, `/profile`, `/admin`.
+  - Estructura de carpetas limpia: `components/Layout`, `pages`.
+  - Layout reutilizable con Header, Main y Footer.
 
 ## 3. Estado Actual 🚧
 
@@ -62,12 +58,11 @@
 - El sistema de autenticación con JWT está funcionando en dos contextos:
   - API principal de productos (auth básica para proteger rutas de escritura).
   - Mini‑proyecto `jwt-ej1` centrado en JWT avanzado (expiración, refresh, roles, admin‑only).
-- En `jwt-ej1`:
-  - Login devuelve token válido con datos de usuario y rol.
-  - Middlewares `tokenCheck` y `adminCheck` controlan acceso a rutas protegidas.
-  - Rutas `/profile` y `/profile/:id` permiten recuperar datos del usuario autenticado o por ID.
-  - Existe flujo de refresh para renovar tokens expirados si el usuario sigue siendo válido.
-- La base de datos y Prisma ya están integrados en el flujo real de trabajo (Supabase) y en ejercicios locales (SQLite) para practicar sin riesgo.
+- **Frontend (Auth Dashboard):**
+  - Esqueleto de la aplicación funcionando.
+  - Navegación entre páginas implementada.
+  - Estilos base con TailwindCSS v4 listos.
+  - Pendiente: Integración con API `jwt-ej1` y lógica de autenticación.
 
 ## 4. Próximos Pasos (Hoja de Ruta: Profundizar en DB + Auth + Frontend) 🗺️
 
@@ -75,11 +70,11 @@
 2. **Asociar productos a usuarios:** Guardar `userId` en la tabla de productos para saber el “owner” real y limitar edición/borrado solo al creador o admin.
 3. **Validaciones y errores:** Mejorar manejo de errores, validaciones de entrada y mensajes de respuesta (por ejemplo usando una capa de validación tipo Zod/JOI en los controladores).
 4. **Tests básicos:** Crear pruebas de integración para login, rutas protegidas, flujo de refresh y restricciones de rol.
-5. **Mini‑proyecto React “Auth Dashboard”:** Crear una SPA en React (Vite + TS) que consuma el backend `jwt-ej1`:
-   - Pantallas: Login, Profile, Admin (gestión de usuarios).
-   - Uso de `react-router-dom` para rutas públicas, privadas y solo admin.
-   - Contexto/Hooks de auth para manejar `user`, `token`, `login`, `logout`.
-   - Llamadas a `/login`, `/profile`, `/register` y `/refresh` desde el frontend.
+5. **Mini‑proyecto React “Auth Dashboard” (Lógica):**
+   - Implementar `AuthContext` para manejo de estado global de usuario.
+   - Conectar con API `jwt-ej1` (`/login`, `/profile`, `/refresh`).
+   - Proteger rutas privadas y restringir acceso a admin.
+   - Manejar persistencia de sesión y renovaciones automáticas.
 6. **Preparar salto a Next.js:** Dejar APIs listas para ser consumidas desde Next.js, incluyendo:
    - Manejo de tokens en el cliente (almacenamiento seguro).
    - Uso de `/refresh` para renovar sesión sin re‑loguear al usuario.
