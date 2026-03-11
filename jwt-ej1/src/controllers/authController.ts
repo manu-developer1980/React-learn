@@ -72,10 +72,10 @@ export const login = async (req: Request, res: Response) => {
     if (decrypt) {
       const token = jwt.sign(
         {
-          userId: user.id,
-          userName: user.name,
-          userEmail: user.email,
-          userRole: user.role,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
         },
         jwtSecret as string,
         {
@@ -103,7 +103,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const profile = async (req: AuthedRequest, res: Response) => {
   const userId = !req.params.id
-    ? req.userId
+    ? req.id
     : parseInt((req.params.id as string) || "0");
   const userData = await prisma.user.findUnique({
     where: { id: userId },
@@ -155,7 +155,7 @@ export const refresh = async (req: AuthedRequest, res: Response) => {
     });
     return;
   }
-  //Limpiar payload antigui, conservar solo datos de usuario.
+  //Limpiar payload antiguo, conservar solo datos de usuario.
   const { exp, iat, nbf, jti, ...userPayload } = payload;
   const newToken = jwt.sign(userPayload, jwtSecret as string, {
     expiresIn: "5m",

@@ -44,10 +44,10 @@ export const tokenCheck = (
     const payload = jwt.verify(token, jwtSecret) as JwtPayload;
 
     //Sacamos los valores que nos interesan del payload.
-    req.userId = payload.userId;
-    req.userName = payload.userName;
-    req.userEmail = payload.userEmail;
-    req.userRole = payload.userRole;
+    req.id = payload.id;
+    req.name = payload.name;
+    req.email = payload.email;
+    req.role = payload.role;
     next();
   } catch (error) {
     if (error instanceof TokenExpiredError) {

@@ -1,8 +1,8 @@
 import { Request } from "express";
 
 export type AuthedRequest = Request & {
-  userId?: number;
-  userName?: string;
-  userEmail?: string;
-  userRole?: string;
+  id?: number;
+  name?: string;
+  email?: string;
+  role?: string;
 };
