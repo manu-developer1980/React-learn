@@ -82,10 +82,18 @@ export const login = async (req: Request, res: Response) => {
           expiresIn: "5m",
         },
       );
+
+      const safeUser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      };
+
       res.status(200).json({
         mensaje: `Bienvenido ${user.name}`,
         token: token,
-        userData: user,
+        userData: safeUser,
       });
       return;
     } else {
@@ -107,6 +115,7 @@ export const profile = async (req: AuthedRequest, res: Response) => {
     : parseInt((req.params.id as string) || "0");
   const userData = await prisma.user.findUnique({
     where: { id: userId },
+    select: { id: true, name: true, email: true, role: true },
   });
 
   if (!userData || userData === undefined) {
@@ -145,7 +154,7 @@ export const refresh = async (req: AuthedRequest, res: Response) => {
 
   const userData = await prisma.user.findUnique({
     where: {
-      id: payload.userId,
+      id: payload.id,
     },
   });
 

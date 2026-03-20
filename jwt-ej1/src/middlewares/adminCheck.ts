@@ -48,9 +48,9 @@ export const adminCheck = (
     req.name = payload.name;
     req.email = payload.email;
     req.role = payload.role;
-    if (payload.userRole !== "admin") {
-      res.status(401).json({
-        error: `No tienes provilegios para esta accion ${payload.userRole}`,
+    if (payload.role !== "admin") {
+      res.status(403).json({
+        error: `No tienes privilegios para esta accion.`,
       });
       return;
     }

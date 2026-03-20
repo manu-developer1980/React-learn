@@ -63,9 +63,17 @@ Seguimos con el stack Full-Stack (Node/Express + Prisma + React). El foco actual
   - Mini‑proyecto `jwt-ej1` centrado en JWT avanzado (expiración, refresh, roles, admin‑only).
 - **Frontend (Auth Dashboard):**
   - Estado global de auth implementado con Context API (`user`, `token`, `login`, `logout`) + persistencia en `localStorage`.
+  - `hydration` implementado para evitar redirecciones falsas al recargar rutas privadas.
   - Flujo de login funcional (frontend ↔ backend) y logout funcional (limpia estado + storage).
-  - Componente `ProtectedRoutes` creado (portero para rutas privadas), pendiente de conectar en el router.
-  - Pendiente: perfil real consumiendo `/api/auth/profile` con `Authorization: Bearer <token>`.
+  - `ProtectedRoutes` conectado en el router para proteger `/profile`.
+  - `AdminProtectedRoutes` implementado y conectado para proteger `/admin` por rol (UX “Sin permisos”).
+  - `Profile` ya consume `/api/auth/profile` con `Authorization: Bearer <token>` y maneja `loading/error/data`.
+  - URL del backend movida a `VITE_API_URL` (Vite) en `Profile` y `LoginForm`.
+- **Backend (`jwt-ej1`):**
+  - `login` devuelve `userData` seguro (sin `password`).
+  - `profile` devuelve `userData` seguro usando `select` (sin `password`).
+  - `adminCheck` valida `payload.role` y devuelve 403 cuando falta rol admin.
+  - `refresh` valida existencia de usuario usando `payload.id`.
 
 ## 4. Próximos Pasos (Hoja de Ruta: Profundizar en DB + Auth + Frontend) 🗺️
 
@@ -74,18 +82,18 @@ Seguimos con el stack Full-Stack (Node/Express + Prisma + React). El foco actual
 3. **Validaciones y errores:** Mejorar manejo de errores, validaciones de entrada y mensajes de respuesta (por ejemplo usando una capa de validación tipo Zod/JOI en los controladores).
 4. **Tests básicos:** Crear pruebas de integración para login, rutas protegidas, flujo de refresh y restricciones de rol.
 5. **Mini‑proyecto React “Auth Dashboard” (Lógica):**
-   - Conectar `ProtectedRoutes` en `App.tsx` para proteger `/profile` y `/admin`.
-   - Crear guard de rol para Admin (ej. `role === "admin"`).
-   - Consumir `/api/auth/profile` usando el `token` del contexto y manejar errores (401/403).
-   - Implementar refresh real: interceptar token expirado → llamar `/api/auth/refresh` → reintentar.
-   - Mover la URL del backend a una variable de entorno (`VITE_API_URL`) para no hardcodear `localhost:3000`.
-   - Limpiar respuestas/DTOs del backend (evitar exponer `password` en `userData`).
+   - Consolidar `apiFetch` en `AuthContext` para no repetir `fetch + Bearer + parse + errores`.
+   - Implementar refresh real en frontend: 401 `"Token expirado"` → `/api/auth/refresh` → retry 1 vez → si falla `logout`.
+   - Reutilizar `apiFetch` en `Profile` (y luego en el resto de requests).
+   - Normalizar UX de errores (401 → login, 403 → “Sin permisos”).
+   - Limpiar logs de debug (`Header`, `LoadingSpinner`) cuando el flujo esté cerrado.
+ 6. **Mapa mental del proyecto:** Mantener actualizado el documento `MAPA_MENTAL_AUTH.md` para recordar cómo encaja cada pieza.
 6. **Preparar salto a Next.js:** Dejar APIs listas para ser consumidas desde Next.js, incluyendo:
    - Manejo de tokens en el cliente (almacenamiento seguro).
    - Uso de `/refresh` para renovar sesión sin re‑loguear al usuario.
 
 ## 5. Notas Técnicas (para la próxima sesión) 🧩
 
-- `auth-dashboard/src/App.tsx`: la ruta de admin está como `path="admin"` (sin `/`), revisar.
-- `jwt-ej1/src/middlewares/adminCheck.ts`: revisar que el check de rol use `payload.role` (no `payload.userRole`).
-- `jwt-ej1/src/controllers/authController.ts` (`refresh`): revisar que el lookup use `payload.id` (no `payload.userId`).
+- `auth-dashboard/src/context/AuthContext.tsx`: al añadir `apiFetch`, mantener el Context consistente (type vs provider value) y evitar placeholders que no se usan.
+- `auth-dashboard/src/components/Layout/ProtectedRoutes.tsx`: `hydration` debe decidir si “puedo decidir” (loading) antes de redirigir.
+- `jwt-ej1`: mantener 401 para “no autenticado” y 403 para “autenticado sin permisos”.

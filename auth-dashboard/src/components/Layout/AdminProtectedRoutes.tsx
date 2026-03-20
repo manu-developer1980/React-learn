@@ -6,7 +6,9 @@ import LoadingSpinner from "./LoadingSpinner";
 interface ProtectedRouteProps {
   children: ReactNode;
 }
-export default function ProtectedRoutes({ children }: ProtectedRouteProps) {
+export default function AdminProtectedRoutes({
+  children,
+}: ProtectedRouteProps) {
   const { user, hydration } = useAuth();
 
   return !hydration ? (
@@ -16,7 +18,9 @@ export default function ProtectedRoutes({ children }: ProtectedRouteProps) {
       to="/login"
       replace
     />
-  ) : (
+  ) : user.role === "admin" ? (
     <>{children}</>
+  ) : (
+    <h2>Sin permisos</h2>
   );
 }

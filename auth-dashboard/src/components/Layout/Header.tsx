@@ -4,11 +4,7 @@ import { useEffect } from "react";
 export default function Header() {
   const { user, logout } = useAuth();
   useEffect(() => {
-    if (user) {
-      console.log(user);
-    } else {
-      console.log("Usuario no logeado");
-    }
+    console.log(user ? user : "Usuario no logeado");
   }, [user]);
   return (
     <>
@@ -22,7 +18,7 @@ export default function Header() {
                 onClick={logout}
                 className="bg-red-500"
               >
-                Logout{" "}
+                Logout
               </button>
             </div>
           ) : (

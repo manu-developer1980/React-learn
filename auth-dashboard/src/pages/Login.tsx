@@ -1,4 +1,3 @@
-import React from "react";
 import LoginForm from "../components/Layout/LoginForm";
 
 export default function Login() {
