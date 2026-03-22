@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext"; //con useAuth nos traemos todo lo que se exporta del context
 import LoadingSpinner from "../components/Layout/LoadingSpinner";
 
+interface userDataType {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 export default function Profile() {
-  const { token, logout } = useAuth();
+  const { token, logout, apiFetch } = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
-  const [profileData, setProfileData] = useState<any>(null);
+  const [profileData, setProfileData] = useState<userDataType | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,38 +24,21 @@ export default function Profile() {
       }
       try {
         //hacemos el fetch
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/auth/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        //Recuperar los datos del response y parseamos el json
-        const data = await response.json();
-        if (response.ok) {
-          setProfileData(data.userData);
-          setError(null);
-          setLoading(false);
-          return;
-        }
-        if (response.status === 401) {
-          setError(data.error ?? "No autorizado");
-          setProfileData(null);
-          setLoading(false);
-          logout();
-        }
+        const data = await apiFetch("/api/auth/profile");
+        setProfileData(data.userData);
+        setError(null);
+        setLoading(false);
       } catch (e) {
-        setError("Error de red al cargar el perfil");
+        setError(
+          e instanceof Error ? e.message : "Error de red al cargar el perfil",
+        );
         setProfileData(null);
         setLoading(false);
       }
     };
 
     loadProfile();
-  }, [token]);
+  }, [token, apiFetch, logout]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <p>{error}</p>;

@@ -25,7 +25,8 @@ export default function LoginForm() {
       } else {
         setError(data.error);
       }
-    } catch (error) {
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error en Login");
       console.log(error);
     }
   };
@@ -37,20 +38,20 @@ export default function LoginForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-
       <input
         type="password"
         placeholder="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
       <button
         type="submit"
         className="bg-taupe-500"
       >
         Entrar
       </button>
+      ( error &&
+      <p>{error}</p>)
     </form>
   );
 }

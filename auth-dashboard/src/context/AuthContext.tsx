@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface User {
   id: number;
@@ -19,16 +13,30 @@ interface AuthContextType {
   login: (token: string, userData: User) => void;
   logout: () => void;
   hydration: boolean;
-  apiFetch: (path: string, options?: RequestInit) => Promise<any>;
+  apiFetch: (path: string, options?: RequestInit) => Promise<unknown>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [hydration, setHydration] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const hydration = true;
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem("user");
 
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser);
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        }
+        localStorage.removeItem("user");
+      }
+    }
+  });
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("token"),
+  );
   const API_URL = import.meta.env.VITE_API_URL as string;
 
   const login = (newToken: string, userData: User) => {
@@ -45,18 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("token");
   };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-    setHydration(true);
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-    }
-  }, []);
-
   // Helper apiFetch. Podemos especificar que ruta la API queremos.
-  //
   const apiFetch = async (
     path: string,
     options: RequestInit = {},

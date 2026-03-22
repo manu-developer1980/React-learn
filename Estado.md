@@ -53,6 +53,9 @@ Seguimos con el stack Full-Stack (Node/Express + Prisma + React). El foco actual
   - `AuthProvider` integrado en el entrypoint (contexto de auth disponible en toda la app).
   - Login conectado contra `jwt-ej1` (obtiene `token` + `userData`, guarda en `localStorage` y navega a `/profile`).
   - Header reacciona a `user` (muestra saludo y logout) y hace `console.log` cuando cambia el estado.
+  - `Profile` refactorizado para consumir el perfil usando `apiFetch` (menos duplicación de fetch/headers/errores).
+  - `LoginForm` ajustado para guardar errores con `setError` y mostrarlos en UI (en vez de solo loguear).
+  - `AuthContext` en refactor: lectura inicial desde `localStorage` con lazy init + helper `apiFetch` con refresh/retry (pendiente cerrar lint y detalles).
 
 ## 3. Estado Actual 🚧
 
@@ -63,12 +66,13 @@ Seguimos con el stack Full-Stack (Node/Express + Prisma + React). El foco actual
   - Mini‑proyecto `jwt-ej1` centrado en JWT avanzado (expiración, refresh, roles, admin‑only).
 - **Frontend (Auth Dashboard):**
   - Estado global de auth implementado con Context API (`user`, `token`, `login`, `logout`) + persistencia en `localStorage`.
-  - `hydration` implementado para evitar redirecciones falsas al recargar rutas privadas.
+  - `hydration` / inicialización desde `localStorage`: en transición a lazy init para evitar redirecciones falsas al recargar rutas privadas.
   - Flujo de login funcional (frontend ↔ backend) y logout funcional (limpia estado + storage).
   - `ProtectedRoutes` conectado en el router para proteger `/profile`.
   - `AdminProtectedRoutes` implementado y conectado para proteger `/admin` por rol (UX “Sin permisos”).
-  - `Profile` ya consume `/api/auth/profile` con `Authorization: Bearer <token>` y maneja `loading/error/data`.
+  - `Profile` ya consume `/api/auth/profile` y maneja `loading/error/data` usando `apiFetch` del contexto.
   - URL del backend movida a `VITE_API_URL` (Vite) en `Profile` y `LoginForm`.
+  - Pendiente: cerrar errores de lint de Fast Refresh en auth (separación/ajuste de `useAuth`) y pulir `apiFetch` (tipado + retry).
 - **Backend (`jwt-ej1`):**
   - `login` devuelve `userData` seguro (sin `password`).
   - `profile` devuelve `userData` seguro usando `select` (sin `password`).
@@ -82,13 +86,13 @@ Seguimos con el stack Full-Stack (Node/Express + Prisma + React). El foco actual
 3. **Validaciones y errores:** Mejorar manejo de errores, validaciones de entrada y mensajes de respuesta (por ejemplo usando una capa de validación tipo Zod/JOI en los controladores).
 4. **Tests básicos:** Crear pruebas de integración para login, rutas protegidas, flujo de refresh y restricciones de rol.
 5. **Mini‑proyecto React “Auth Dashboard” (Lógica):**
-   - Consolidar `apiFetch` en `AuthContext` para no repetir `fetch + Bearer + parse + errores`.
-   - Implementar refresh real en frontend: 401 `"Token expirado"` → `/api/auth/refresh` → retry 1 vez → si falla `logout`.
-   - Reutilizar `apiFetch` en `Profile` (y luego en el resto de requests).
+   - Consolidar `apiFetch` en `AuthContext` para no repetir `fetch + Bearer + parse + errores` (🟡 base hecha, falta pulir lint/tipos).
+   - Implementar refresh real en frontend: 401 `"Token expirado"` → `/api/auth/refresh` → retry 1 vez → si falla `logout` (🟡 base en `apiFetch`, falta cerrar detalles).
+   - Reutilizar `apiFetch` en `Profile` (✅ hecho) y luego en el resto de requests.
    - Normalizar UX de errores (401 → login, 403 → “Sin permisos”).
    - Limpiar logs de debug (`Header`, `LoadingSpinner`) cuando el flujo esté cerrado.
- 6. **Mapa mental del proyecto:** Mantener actualizado el documento `MAPA_MENTAL_AUTH.md` para recordar cómo encaja cada pieza.
-6. **Preparar salto a Next.js:** Dejar APIs listas para ser consumidas desde Next.js, incluyendo:
+6. **Mapa mental del proyecto:** Mantener actualizado el documento `MAPA_MENTAL_AUTH.md` para recordar cómo encaja cada pieza.
+7. **Preparar salto a Next.js:** Dejar APIs listas para ser consumidas desde Next.js, incluyendo:
    - Manejo de tokens en el cliente (almacenamiento seguro).
    - Uso de `/refresh` para renovar sesión sin re‑loguear al usuario.
 
