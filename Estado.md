@@ -7,6 +7,7 @@ Arrancamos una fase nueva con foco claro y alcance cerrado. Dejamos Auth en “M
 - Fase 1 (React Basics): mini‑proyecto Kanban completado.
 - Fase 3 (Node+Express): API REST hecha en `jwt-ej1` con JWT.
 - Auth Dashboard: base funcional (login, contexto, rutas protegidas). Estado: congelado para no dispersarnos.
+- NX1 (Next.js Fundamentals): blog en `nx1-blog` con App Router, navegación, `Post` tipado, SSG en `/posts/[slug]` (generateStaticParams) y SSR en `/server-time`. Estado: listo ✅
 
 ## Siguiente Módulo
 
@@ -50,4 +51,10 @@ Arrancamos una fase nueva con foco claro y alcance cerrado. Dejamos Auth en “M
 
 ## Próxima Sesión
 
-- Crear esqueleto de proyecto Next.js, layout, páginas básicas y navegación.
+- Fase 4: Next.js (seguimos el curso)
+  - NX2: SSR, SSG e ISR (caché, revalidación, y criterios de cuándo usar cada modo).
+  - Mini-módulo Tailwind (aplicado al blog `nx1-blog`):
+    - Sesión 1: layout base + header responsive + focus states.
+    - Sesión 2: Card/Badge/Button sin librerías + estados hover/focus-visible.
+    - Sesión 3: responsive real (Home lista→grid, Post con ancho máximo y espaciado).
+  - Mantener hábitos de proyecto: lint + build pasando en cada iteración.
