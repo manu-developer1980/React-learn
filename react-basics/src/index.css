@@ -1,0 +1,150 @@
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0px;
+  background-color: #f0f0f0;
+}
+nav {
+  display: flex;
+  gap: 16px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+nav a {
+  text-decoration: none;
+}
+nav a.active {
+  font-weight: bold;
+  color: #646cff;
+  /* O el color que prefieras */
+  border-bottom: 2px solid #646cff;
+}
+section {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+section h5 {
+  margin: 0;
+  font-size: 24px;
+  text-transform: capitalize;
+  text-align: center;
+  padding: 5px;
+  text-shadow: 0px 1px 2px #0000007e;
+  color: #ffffff;
+}
+section h5::after {
+  content: "s";
+}
+section ul {
+  box-shadow: 0px 0px 7px #0000003e;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+  gap: 10px;
+}
+section ul.tareasPendientes {
+  background-color: #ff0000c4;
+  color: #fff;
+}
+section ul.tareasIniciadas {
+  background-color: #ffd500c4;
+  color: #000;
+}
+section ul.tareasCompletas {
+  background-color: #0c7303c4;
+  color: #252b25c4;
+}
+section ul li {
+  height: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+section ul li:nth-child(odd) {
+  background-color: #ff00002b;
+}
+section ul li:nth-child(even) {
+  background-color: #f923232b;
+}
+section ul li button {
+  border-radius: 5px;
+}
+section ul li.completa {
+  background-color: #00861054;
+}
+section ul li.incompleta {
+  background-color: #86000054;
+}
+section ul li.hide {
+  display: none;
+}
+section ul li span.buttons {
+  display: flex;
+  gap: 16px;
+}
+section ul.usuarios li {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: fit-content;
+}
+section ul .filtros {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 5px;
+}
+section.stats {
+  align-items: center;
+}
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.loadingContainer span.loadingSpinner {
+  width: 32px;
+  height: 32px;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNjQwIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDcuMS4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjYgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTU0NS43IDMwNC4xQzUyOC4xIDMwMi45IDUxMi44IDMxNi4xIDUxMS41IDMzMy44QzUwOC4yIDM4MC44IDQ4Ny45IDQyMy4yIDQ1Ni43IDQ1NC44TDQyNSA0MjNDNDE4LjEgNDE2LjEgNDA3LjggNDE0LjEgMzk4LjggNDE3LjhDMzg5LjggNDIxLjUgMzg0IDQzMC4zIDM4NCA0NDBMMzg0IDU1MkMzODQgNTY1LjMgMzk0LjcgNTc2IDQwOCA1NzZMNTIwIDU3NkM1MjkuNyA1NzYgNTM4LjUgNTcwLjIgNTQyLjIgNTYxLjJDNTQ1LjkgNTUyLjIgNTQzLjkgNTQxLjkgNTM3IDUzNUw1MDIgNTAwQzU0My43IDQ1Ny44IDU3MC45IDQwMS4yIDU3NS40IDMzOC4yQzU3Ni42IDMyMC42IDU2My40IDMwNS4zIDU0NS43IDMwNHpNMTAzIDEwNUwxMzggMTQwQzk2LjMgMTgyLjIgNjkuMSAyMzguOCA2NC42IDMwMS44QzYzLjQgMzE5LjQgNzYuNiAzMzQuNyA5NC4zIDMzNkMxMTIgMzM3LjMgMTI3LjIgMzI0IDEyOC41IDMwNi4zQzEzMS44IDI1OS4zIDE1Mi4xIDIxNi45IDE4My4zIDE4NS4zTDIxNSAyMTdDMjIxLjkgMjIzLjkgMjMyLjIgMjI1LjkgMjQxLjIgMjIyLjJDMjUwLjIgMjE4LjUgMjU2IDIwOS43IDI1NiAyMDBMMjU2IDg4QzI1NiA3NC43IDI0NS4zIDY0IDIzMiA2NEwxMjAgNjRDMTEwLjMgNjQgMTAxLjUgNjkuOCA5Ny44IDc4LjhDOTQuMSA4Ny44IDk2LjIgOTguMSAxMDMgMTA1ek0zMDQgOTQuM0MzMDIuOCAxMTEuOSAzMTYgMTI3LjIgMzMzLjcgMTI4LjVDMzgwLjcgMTMxLjggNDIzLjEgMTUyLjEgNDU0LjcgMTgzLjNMNDIzIDIxNUM0MTYuMSAyMjEuOSA0MTQuMSAyMzIuMiA0MTcuOCAyNDEuMkM0MjEuNSAyNTAuMiA0MzAuMyAyNTYgNDQwIDI1Nkw1NTIgMjU2QzU2NS4zIDI1NiA1NzYgMjQ1LjMgNTc2IDIzMkw1NzYgMTIwQzU3NiAxMTAuMyA1NzAuMiAxMDEuNSA1NjEuMiA5Ny44QzU1Mi4yIDk0LjEgNTQxLjkgOTYuMiA1MzUgMTAzTDUwMCAxMzhDNDU3LjggOTYuMyA0MDEuMiA2OS4xIDMzOC4yIDY0LjZDMzIwLjYgNjMuNCAzMDUuMyA3Ni42IDMwNCA5NC4zek0xMDUgNTM3TDE0MCA1MDJDMTgyLjIgNTQzLjcgMjM4LjggNTcwLjkgMzAxLjggNTc1LjRDMzE5LjQgNTc2LjYgMzM0LjcgNTYzLjQgMzM2IDU0NS43QzMzNy4zIDUyOCAzMjQgNTEyLjggMzA2LjMgNTExLjVDMjU5LjMgNTA4LjIgMjE2LjkgNDg3LjkgMTg1LjMgNDU2LjdMMjE3IDQyNUMyMjMuOSA0MTguMSAyMjUuOSA0MDcuOCAyMjIuMiAzOTguOEMyMTguNSAzODkuOCAyMDkuNyAzODQgMjAwIDM4NEw4OCAzODRDNzQuNyAzODQgNjQgMzk0LjcgNjQgNDA4TDY0IDUyMEM2NCA1MjkuNyA2OS44IDUzOC41IDc4LjggNTQyLjJDODcuOCA1NDUuOSA5OC4xIDU0My44IDEwNSA1Mzd6Ii8+PC9zdmc+);
+  transform: rotate(360deg);
+  animation: spin 1s linear infinite;
+}
+#cardContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+#cardContainer .card {
+  width: 300px;
+  height: 200px;
+  max-height: fit-content;
+  border-radius: 10px;
+  box-shadow: 0px 1px 2px #000;
+  padding: 10px;
+}
+#cardContainer .card h2 {
+  padding: 0;
+  margin: 0;
+}
+.layout {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
